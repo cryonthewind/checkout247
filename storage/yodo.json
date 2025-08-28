@@ -1,5 +1,23 @@
 [
    {
+      "name":"SQ1 BLUE",
+      "url":"https://www.yodobashi.com/product-detail/100000001005864550/",
+      "last4":"1",
+      "autoClick":true
+   },
+   {
+      "name":"SQ1 ORANGE",
+      "url":"https://www.yodobashi.com/product/100000001005864549/",
+      "last4":"1",
+      "autoClick":true
+   },
+   {
+      "name":"SQ1 WHITE",
+      "url":"https://www.yodobashi.com/product/100000001005864551/",
+      "last4":"1",
+      "autoClick":true
+   },
+   {
       "name":"INSTAX MINI JP 2",
       "url":"https://www.yodobashi.com/product/100000001003891483/",
       "last4":"1",
@@ -10,7 +28,80 @@
       "url":"https://www.yodobashi.com/product/100000001003891482/",
       "last4":"5",
       "autoClick":true
-   },{
+   },
+   {
+      "name":"MICKEY",
+      "url":"https://www.yodobashi.com/product-detail/100000001006999576/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"KITTY3",
+      "url":"https://www.yodobashi.com/product-detail/100000001003392713/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"KIKILALA",
+      "url":"https://www.yodobashi.com/product-detail/100000001001788520/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"POOH",
+      "url":"https://www.yodobashi.com/product-detail/100000001001935853/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"HEART SKETCH",
+      "url":"https://www.yodobashi.com/product-detail/100000001007617488/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"MERMAID",
+      "url":"https://www.yodobashi.com/product-detail/100000001005167373/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"MACARON",
+      "url":"https://www.yodobashi.com/product-detail/100000001003645146/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"BLUE",
+      "url":"https://www.yodobashi.com/product/100000001003292677/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"LAVENDER",
+      "url":"https://www.yodobashi.com/product/100000001008096498/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"PHOTO SLIDE",
+      "url":"https://www.yodobashi.com/product/100000001008562496/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"RAINBOW",
+      "url":"https://www.yodobashi.com/product/100000001001651456/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
+      "name":"SQUARE20",
+      "url":"https://www.yodobashi.com/product/100000001003890145/",
+      "last4":"1",
+      "autoClick":true
+   }
+   ,{
       "name":"TISSUES",
       "url":"https://www.yodobashi.com/product/100000001003511041/",
       "last4":"5",
