@@ -1,6 +1,0 @@
-2025/08/26-11:12:48.871 1addd Reusing MANIFEST /Users/toandz/Desktop/robot/aliexpress/chekout247/user-data/Default/Local Storage/leveldb/MANIFEST-000001
-2025/08/26-11:12:48.877 1addd Recovering log #4
-2025/08/26-11:12:48.878 1addd Reusing old log /Users/toandz/Desktop/robot/aliexpress/chekout247/user-data/Default/Local Storage/leveldb/000004.log 
-2025/08/26-11:13:48.887 1ade0 Level-0 table #8: started
-2025/08/26-11:13:48.891 1ade0 Level-0 table #8: 112996 bytes OK
-2025/08/26-11:13:48.893 1ade0 Delete type=0 #4

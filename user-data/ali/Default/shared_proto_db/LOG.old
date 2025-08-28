@@ -1,6 +1,0 @@
-2025/08/27-18:38:28.265 4b023b Reusing MANIFEST /Users/toandz/Desktop/robot/aliexpress/chekout247_v2/user-data/ali/Default/shared_proto_db/MANIFEST-000001
-2025/08/27-18:38:28.266 4b023b Recovering log #3
-2025/08/27-18:38:28.267 4b023b Reusing old log /Users/toandz/Desktop/robot/aliexpress/chekout247_v2/user-data/ali/Default/shared_proto_db/000003.log 
-2025/08/27-18:38:30.937 4b023d Level-0 table #5: started
-2025/08/27-18:38:30.945 4b023d Level-0 table #5: 116154 bytes OK
-2025/08/27-18:38:30.949 4b023d Delete type=0 #3
