@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <title>Multi-Site Checkout</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/common.css" />
+  <style>
+    .topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+    .brand { font-weight:700; font-size:20px; }
+    .spacer { flex:1; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">Multi-Site Checkout</div>
+    <div class="spacer"></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-for="tab-site1">Site 1 (AliExpress)</button>
+      <button class="tab-btn" data-for="tab-site2">Site 2 (Yodobashi)</button>
+    </div>
+  </div>
+
+  <div id="tab-site1" class="tab-panel active">
+    <iframe class="frame" src="/aliexpress/index.html" title="Site 1"></iframe>
+  </div>
+  <div id="tab-site2" class="tab-panel">
+    <iframe class="frame" src="/yodobashi/index.html" title="Site 2"></iframe>
+  </div>
+
+  <script>
+    // Simple tab switch + optional query ?site=1|2|aliexpress|yodobashi
+    const btns = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.tab-panel');
+    function activate(id) {
+      btns.forEach(b => b.classList.toggle('active', b.dataset.for === id));
+      panels.forEach(p => p.classList.toggle('active', p.id === id));
+    }
+    btns.forEach(b => b.addEventListener('click', () => activate(b.dataset.for)));
+    const q = new URLSearchParams(location.search).get('site')?.toLowerCase();
+    if (q === '2' || q === 'yodobashi') activate('tab-site2');
+    if (q === '1' || q === 'aliexpress') activate('tab-site1');
+  </script>
+</body>
+</html>

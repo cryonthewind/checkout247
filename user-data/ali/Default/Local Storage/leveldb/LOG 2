@@ -1,0 +1,27 @@
+2025/08/27-11:22:22.679 41a7f8 Reusing MANIFEST /Users/toandz/Desktop/robot/aliexpress/chekout247_v2/user-data/ali/Default/Local Storage/leveldb/MANIFEST-000001
+2025/08/27-11:22:22.710 41a7f8 Recovering log #8
+2025/08/27-11:22:22.712 41a7f8 Reusing old log /Users/toandz/Desktop/robot/aliexpress/chekout247_v2/user-data/ali/Default/Local Storage/leveldb/000008.log 
+2025/08/27-11:22:39.448 41a7fc Level-0 table #12: started
+2025/08/27-11:22:39.452 41a7fc Level-0 table #12: 89731 bytes OK
+2025/08/27-11:22:39.455 41a7fc Delete type=0 #8
+2025/08/27-11:23:22.785 41a7fc Level-0 table #14: started
+2025/08/27-11:23:22.787 41a7fc Level-0 table #14: 87600 bytes OK
+2025/08/27-11:23:22.789 41a7fc Delete type=0 #11
+2025/08/27-11:25:09.966 41a7fc Level-0 table #16: started
+2025/08/27-11:25:09.969 41a7fc Level-0 table #16: 135683 bytes OK
+2025/08/27-11:25:09.973 41a7fc Delete type=0 #13
+2025/08/27-11:25:09.973 41a7fc Compacting 4@0 + 1@1 files
+2025/08/27-11:25:09.979 41a7fc Generated table #17@0: 89 keys, 239607 bytes
+2025/08/27-11:25:09.979 41a7fc Compacted 4@0 + 1@1 files => 239607 bytes
+2025/08/27-11:25:09.980 41a7fc compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/08/27-11:25:09.981 41a7fc Delete type=2 #14
+2025/08/27-11:25:09.981 41a7fc Delete type=2 #16
+2025/08/27-11:25:09.981 41a7fc Delete type=2 #7
+2025/08/27-11:25:09.981 41a7fc Delete type=2 #12
+2025/08/27-11:25:09.981 41a7fc Delete type=2 #9
+2025/08/27-11:26:01.529 41a7fc Level-0 table #19: started
+2025/08/27-11:26:01.532 41a7fc Level-0 table #19: 92859 bytes OK
+2025/08/27-11:26:01.535 41a7fc Delete type=0 #15
+2025/08/27-11:26:02.526 41a7fc Level-0 table #21: started
+2025/08/27-11:26:02.529 41a7fc Level-0 table #21: 172021 bytes OK
+2025/08/27-11:26:02.532 41a7fc Delete type=0 #18

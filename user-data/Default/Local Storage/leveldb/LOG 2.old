@@ -1,0 +1,5 @@
+2025/08/26-11:07:03.893 19285 Creating DB /Users/toandz/Desktop/robot/aliexpress/chekout247/user-data/Default/Local Storage/leveldb since it was missing.
+2025/08/26-11:07:03.905 19285 Reusing MANIFEST /Users/toandz/Desktop/robot/aliexpress/chekout247/user-data/Default/Local Storage/leveldb/MANIFEST-000001
+2025/08/26-11:08:03.919 19287 Level-0 table #5: started
+2025/08/26-11:08:03.922 19287 Level-0 table #5: 88244 bytes OK
+2025/08/26-11:08:03.925 19287 Delete type=0 #3

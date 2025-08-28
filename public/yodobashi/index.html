@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Checkout – Site 2 (Yodobashi)</title>
+  <link rel="stylesheet" href="/common.css" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    .toolbar { display:flex; gap:8px; align-items:center; margin:12px 0; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { border:1px solid #e5e7eb; padding:8px; }
+    th { background:#f8fafc; text-align:left; }
+    .actions button { margin-right:6px; }
+    #log { margin-top:12px; background:#0b1221; color:#e5f0ff; padding:12px; border-radius:8px; min-height:120px; }
+    input[type="text"], input[type="number"] { width:100%; box-sizing:border-box; }
+  </style>
+</head>
+<body>
+  <h2>Checkout – Site 2</h2>
+
+  <div class="toolbar">
+    <button id="btnLogin">Open Chrome for login</button>
+    <button id="btnSave">Save session</button>
+    <button id="btnAdd">Thêm dòng</button>
+
+    <button id="btnImport">Import JSON</button>
+    <input id="file" type="file" accept="application/json" style="display:none" />
+    <span id="fileName" style="opacity:.6"></span>
+
+    <button id="btnRunAll">Run All</button>
+    <button id="btnClearLog">Clear Log</button>
+  </div>
+
+  <div style="opacity:.7;margin-bottom:10px">
+    Thứ tự cột: Auto click → Tên sản phẩm → Checkout URL → <b>Quantity</b>.
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="actions">Thao tác</th>
+        <th class="name">Tên sản phẩm</th>
+        <th class="url">Checkout URL</th>
+        <th class="quantity">Quantity</th>
+        <th class="checkbox">Auto click</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr>
+        <td class="actions">
+          <button class="run">Run</button>
+          <button class="del">Xóa</button>
+        </td>
+        <td class="name"><input type="text" placeholder="Sample product" /></td>
+        <td class="url"><input type="text" placeholder="https://yodobashi.com/product/..." /></td>
+        <td class="quantity"><input type="number" min="1" step="1" placeholder="1" value="1" /></td>
+        <td class="checkbox"><input type="checkbox" checked /></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:16px">Log</h3>
+  <div id="log"></div>
+
+  <script src="/yodobashi/client.js"></script>
+  <script src="/yodobashi/augment-preset.js"></script>
+</body>
+</html>
