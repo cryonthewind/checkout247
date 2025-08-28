@@ -1,0 +1,17 @@
+# Ignore OS / IDE files
+.DS_Store
+Thumbs.db
+
+# Ignore cache / temp directories
+node_modules/
+dist/
+tmp/
+.cache/
+.disk-cache/
+.disk-cache/
+user-data/
+
+# Ignore log files
+*.log
+
+# Ignore environment config
