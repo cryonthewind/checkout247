@@ -19,8 +19,5 @@ cp .env.example .env
 npm run dev
 # mở http://localhost:3000
 ```
-
-1. node login-once.js
-2. npm run dev
-3. lsof -i tcp:3000
-4. kill -9
+# ALIEXPRESS
+Khi bi anti bot thi xoa het cookie di run lai

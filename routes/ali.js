@@ -38,6 +38,23 @@ module.exports = (app) => {
       return res.status(500).json({ ok: false, error: String(err) });
     }
   });
+  // In routes/ali.js
+  app.get('/api/ali/open', async (req, res) => {
+    try {
+      const url = String(req.query.url || 'https://ja.aliexpress.com/').trim();
+      const ctx = await getContext('ali');
+      const page = await ctx.newPage();
+      await page.bringToFront();
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      return res.json({ ok: true, url });
+    } catch (e) { return res.status(500).json({ ok:false, error: String(e.message||e) }); }
+  });
+
+  // Back-compat alias for current UI
+  app.get('/api/open', (req, res) =>
+    app._router.handle(Object.assign(req, { url: '/api/ali/open' + (req._parsedUrl.search || '') }), res)
+  );
+
 
   // Login page (AliExpress)
   app.get('/api/login', async (_req, res) => {

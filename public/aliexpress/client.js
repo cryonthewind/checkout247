@@ -4,7 +4,7 @@
     const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
     const logBox = $('#log');
   
-    const now = () => new Date().toLocaleTimeString('vi-VN', {hour12:false});
+    const now = () => new Date().toLocaleTimeString('ja-JP', {hour12:false});
     const log = (msg, color) => {
       const line = document.createElement('div');
       line.textContent = `[${now()}] ${msg}`;
