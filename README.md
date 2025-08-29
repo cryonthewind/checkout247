@@ -1,38 +1,38 @@
-# AliExpress Checkout Runner (Web UI)
+# 🧰 Checkout Runner (Web UI)
 
-Web UI tối giản chạy tại `http://localhost:3000` để mở nhiều link checkout AliExpress,
-tự chọn phương thức thanh toán theo 4 số cuối thẻ (nếu cung cấp) và tùy chọn bấm `注文する / Place order`.
-Trình duyệt sẽ **giữ mở** để bạn xác nhận thủ công.
+Web UI tối giản tại **http://localhost:3000** để chạy nhiều link checkout (AliExpress, BigCamera).
 
-## Cài đặt
-```bash
+**Tính năng chính**
+- Mỗi lần bấm **Run** sẽ **mở 1 tab mới** (tab cũ vẫn tiếp tục chạy).
+- Có thể **Import JSON** danh sách link + số lượng.
+- Tùy chọn **tự bấm nút đặt hàng** (Place order / 注文する) nếu bật trên UI.
+- Trình duyệt luôn **giữ mở** để bạn kiểm tra/xác nhận thủ công.
+- BigCamera có cơ chế **chống lỗi HTTP/2** (khuyên dùng CDP) và **refresh an toàn**.
+
+---
+
+## 1) Yêu cầu
+
+- Node.js LTS (≥ 18)
+- Playwright (dùng kênh `chrome`)
+- macOS / Windows / Linux đều được
+
+---
+
+## 2) Cài & chạy
 npm i
 npm run install:browsers
 cp .env.example .env
-# Chỉnh .env: HEADLESS=false, USE_CHROME=true, STORAGE_STATE=aliexpress-auth.json
-```
-
-Đăng nhập 1 lần để tạo `aliexpress-auth.json` bằng script `login-once.js` của bạn.
-
-## Chạy
-```bash
 npm run restart
 
-## STOP
-```
+## 3)  Dừng & giải phóng cổng
 npm run stop-port
 
-# mở http://localhost:3000
-```
-# ALIEXPRESS
-Khi bi anti bot thi xoa het cookie di run lai
-
-## BIG
-1. Step 1
-# macOS
+# BigCamera chế độ CDP (khuyên dùng)
+# 1) Mở Chrome với --remote-debugging-port=9222 (xem mục 5A)
+# 2) Chạy server:
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
   --remote-debugging-port=9222 \
   --user-data-dir="$HOME/.bigcamera-chrome" \
   --lang=ja-JP
-2. Step 2
 BIG_USE_CDP=1 BIG_CDP_PORT=9222 node server.js
