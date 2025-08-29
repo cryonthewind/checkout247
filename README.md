@@ -16,8 +16,23 @@ cp .env.example .env
 
 ## Chạy
 ```bash
-npm run dev
+npm run restart
+
+## STOP
+```
+npm run stop-port
+
 # mở http://localhost:3000
 ```
 # ALIEXPRESS
 Khi bi anti bot thi xoa het cookie di run lai
+
+## BIG
+1. Step 1
+# macOS
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+  --remote-debugging-port=9222 \
+  --user-data-dir="$HOME/.bigcamera-chrome" \
+  --lang=ja-JP
+2. Step 2
+BIG_USE_CDP=1 BIG_CDP_PORT=9222 node server.js

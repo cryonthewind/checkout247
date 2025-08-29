@@ -18,6 +18,7 @@
     <div class="tabs">
       <button class="tab-btn active" data-for="tab-site1">Site 1 (AliExpress)</button>
       <button class="tab-btn" data-for="tab-site2">Site 2 (Yodobashi)</button>
+      <button class="tab-btn" data-for="tab-site3">Site 3 (BigCamera)</button>
     </div>
   </div>
 
@@ -26,6 +27,9 @@
   </div>
   <div id="tab-site2" class="tab-panel">
     <iframe class="frame" src="/yodobashi/index.html" title="Site 2"></iframe>
+  </div>
+  <div id="tab-site3" class="tab-panel">
+    <iframe class="frame" src="/bigcamera/index.html" title="Site 3"></iframe>
   </div>
 
   <script>
@@ -40,6 +44,7 @@
     const q = new URLSearchParams(location.search).get('site')?.toLowerCase();
     if (q === '2' || q === 'yodobashi') activate('tab-site2');
     if (q === '1' || q === 'aliexpress') activate('tab-site1');
+    if (q === '3' || q === 'big' || q === 'bigcamera') activate('tab-site3');
   </script>
 </body>
 </html>

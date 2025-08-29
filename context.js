@@ -2,6 +2,7 @@
 // Per-site contexts with safe defaults.
 // - 'ali'  : launchPersistentContext (stable)
 // - 'yodo' : persistent by default; optional CDP if YODO_USE_CDP=true (with fallback)
+// - 'big'  : CDP attach preferred (dùng Chrome bạn tự mở, port 9222 mặc định)
 
 const path = require('path');
 const fs = require('fs');
@@ -15,8 +16,9 @@ function bool(v, dflt = false) {
   return String(v).toLowerCase() === 'true';
 }
 function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); return p; }
+async function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
-// ---------------------- CDP helpers (optional for Yodo) ----------------------
+// ---------------------- Common helpers ----------------------
 function chromeExecutableGuess() {
   if (process.platform === 'darwin') {
     return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -31,8 +33,8 @@ function chromeExecutableGuess() {
   }
   return 'google-chrome'; // linux common name
 }
-async function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
+// ---------------------- CDP helpers (Yodo - giữ nguyên) ----------------------
 async function launchChromeForCDP(port, profileDir) {
   const exe = process.env.YODO_CHROME || chromeExecutableGuess();
   const args = [
@@ -50,7 +52,6 @@ async function connectYodoViaCDP() {
   const profileDir = ensureDir(path.join(USER_ROOT, 'yodo_cdp'));
   const port = Number(process.env.YODO_CDP_PORT || 9223);
 
-  // Try to connect; if not up, launch then retry a few times
   for (let i = 0; i < 3; i++) {
     try {
       const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
@@ -61,14 +62,66 @@ async function connectYodoViaCDP() {
       await sleep(600 + i * 500);
     }
   }
-  // Final attempt (will throw if still failing)
   const browser = await chromium.connectOverCDP(`http://127.0.0.1:${port}`);
   const ctx = browser.contexts()[0] || (await browser.newContext());
   return ctx;
 }
 
+// ---------------------- CDP helpers (BigCamera) ----------------------
+// Ưu tiên attach vào Chrome thật do bạn mở (tránh dấu hiệu automation)
+async function launchChromeForCDP_Big(port, profileDir) {
+  const exe = process.env.BIG_CHROME || chromeExecutableGuess();
+  const args = [
+    `--remote-debugging-port=${port}`,
+    `--user-data-dir=${path.resolve(profileDir)}`,
+    '--no-first-run',
+    '--no-default-browser-check',
+    '--lang=ja-JP',
+    '--proxy-server=direct://',
+    '--proxy-bypass-list=*',
+    '--disable-quic',
+  ];
+  const child = spawn(exe, args, { stdio: 'ignore', detached: true });
+  child.unref();
+}
+async function connectBigViaCDP() {
+  const USER_ROOT = process.env.USER_DATA_DIR || './user-data';
+  const profileDir = ensureDir(path.join(USER_ROOT, 'big_cdp'));
+  const port = Number(process.env.BIG_CDP_PORT || process.env.CDP_PORT || 9222);
+  const url = process.env.BIG_CDP_URL || `http://127.0.0.1:${port}`;
+
+  for (let i = 0; i < 4; i++) {
+    try {
+      const browser = await chromium.connectOverCDP(url);
+      const ctx = browser.contexts()[0] || (await browser.newContext({
+        locale: 'ja-JP',
+        timezoneId: 'Asia/Tokyo',
+        acceptDownloads: true,
+      }));
+      ctx.__attached = true; // đừng đóng Chrome thật khi shutdown
+      return ctx;
+    } catch {
+      if (i === 0 && bool(process.env.BIG_LAUNCH_IF_NOT_RUNNING, true)) {
+        await launchChromeForCDP_Big(port, profileDir);
+      }
+      await sleep(700 + i * 500);
+    }
+  }
+  const browser = await chromium.connectOverCDP(url);
+  const ctx = browser.contexts()[0] || (await browser.newContext({
+    locale: 'ja-JP',
+    timezoneId: 'Asia/Tokyo',
+    acceptDownloads: true,
+  }));
+  ctx.__attached = true;
+  return ctx;
+}
+
 // ---------------------- Stealth patches per site ----------------------
 async function applyStealth(context, site) {
+  // Nếu đã attach vào Chrome thật thì không cần stealth nặng
+  if (context.__attached) return;
+
   if (site === 'yodo') {
     await context.addInitScript(() => {
       Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -121,16 +174,27 @@ async function createPersistent(site) {
     viewport: { width: 1420, height: 900 },
     locale: 'ja-JP',
     timezoneId: 'Asia/Tokyo',
+    acceptDownloads: true,
     userAgent:
       process.env.USER_AGENT ||
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
     args: [
-      `--disk-cache-dir=${path.resolve(CACHE_DIR)}`,
+      '--proxy-server=direct://',
+      '--proxy-bypass-list=*',
+      '--disable-quic',
+      '--lang=ja-JP',
       '--no-first-run',
       '--no-default-browser-check',
-      // Do NOT add "--disable-blink-features=AutomationControlled"
+      '--disable-blink-features=AutomationControlled',
     ],
+    diskCachePath: CACHE_DIR
   });
+
+  // best-effort hide webdriver
+  await ctx.addInitScript(() => {
+    try { Object.defineProperty(navigator, 'webdriver', { get: () => undefined }); } catch {}
+  });
+
   return ctx;
 }
 
@@ -140,8 +204,8 @@ async function getContext(site = 'default') {
   if (existing && !existing.isClosed?.()) return existing;
 
   let ctx;
+
   if (site === 'yodo') {
-    // Default = persistent; CDP only when explicitly requested
     const useCDP = String(process.env.YODO_USE_CDP || 'false').toLowerCase() === 'true';
     if (useCDP) {
       try {
@@ -149,22 +213,48 @@ async function getContext(site = 'default') {
         ctx = await connectYodoViaCDP();
         console.log('[context] yodo: CDP connected.');
       } catch (e) {
-        console.warn('[context] yodo: CDP failed, fallback to persistent. Reason:', e.message);
+        console.warn('[context] yodo: CDP failed, fallback → persistent:', e.message);
         ctx = await createPersistent('yodo');
       }
     } else {
       ctx = await createPersistent('yodo');
     }
     await applyStealth(ctx, 'yodo');
+
   } else if (site === 'ali') {
     ctx = await createPersistent('ali');
     await applyStealth(ctx, 'ali');
+
+  } else if (site === 'big') {
+    // Ưu tiên CDP attach vào Chrome bạn đang mở (port 9222 mặc định)
+    const useCDP = String(process.env.BIG_USE_CDP ?? 'true').toLowerCase() !== 'false';
+    if (useCDP) {
+      try {
+        console.log('[context] big: trying CDP attach…');
+        ctx = await connectBigViaCDP();
+        console.log('[context] big: CDP attached.');
+      } catch (e) {
+        console.warn('[context] big: CDP failed, fallback → persistent:', e.message);
+        ctx = await createPersistent('big');
+      }
+    } else {
+      ctx = await createPersistent('big');
+    }
+    await applyStealth(ctx, 'big');
+
   } else {
+    // Other sites
     ctx = await createPersistent(site);
     await applyStealth(ctx, site);
   }
 
-  // Do not block CSS/fonts to avoid ORB/CSS breakage
+  // Common headers for JP sites
+  await ctx.setExtraHTTPHeaders?.({
+    'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8',
+    'Upgrade-Insecure-Requests': '1',
+  });
+
+  // Do not block anything
   await ctx.route('**/*', (route) => route.continue());
 
   ctx.setDefaultTimeout(2500);
