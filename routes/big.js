@@ -1,7 +1,7 @@
 // routes/big.js
 const path = require('path');
 const express = require('express');
-const { getContext } = require('../context');
+const { newPageForSite } = require('../context');     // dùng helper mở TAB MỚI
 const { addToCartAndCheckout } = require('../sites/big_core');
 
 const LOGIN_URL = 'https://www.biccamera.com/bc/member/SfrLogin.jsp';
@@ -14,16 +14,14 @@ function normalizePayload(req) {
   const toBool = (v, d) => v === undefined ? d : ['1','true','yes','y','on'].includes(String(v).toLowerCase());
   const toNum  = (v, d) => { const n = Number(v); return Number.isFinite(n) ? n : d; };
 
-  // Auto click từ UI (mặc định true)
-  const autoClick = toBool(pick(raw.autoClick, q.autoClick), true);
-  // placeOrder – nếu không truyền, mặc định = theo autoClick (tick = đặt luôn)
+  const autoClick  = toBool(pick(raw.autoClick,  q.autoClick),  true);
   const placeOrder = toBool(pick(raw.placeOrder, q.placeOrder, raw.autoClick, q.autoClick), autoClick);
 
   return {
     url:       pick(raw.url, raw.productUrl, raw.checkoutUrl, raw.confirmUrl, q.url, q.productUrl, q.checkoutUrl, q.confirmUrl, q.link, q.href),
     quantity:  toNum(pick(raw.quantity, raw.qty, q.quantity, q.qty), 1),
     autoClick,
-    placeOrder,         // chỉ phụ thuộc UI, không phụ thuộc biến môi trường
+    placeOrder,        // theo tick trên UI
     maxSteps:  toNum(pick(raw.maxSteps, q.maxSteps), 3),
   };
 }
@@ -33,12 +31,11 @@ module.exports = (app) => {
 
   app.get('/api/big/status', (_req, res) => res.json({ ok: true, loginUrl: LOGIN_URL }));
 
+  // Luôn mở LOGIN ở TAB MỚI
   app.post('/api/big/login', async (_req, res) => {
     try {
-      const ctx = await getContext('big');
-      let page = ctx.pages().find(p => /biccamera\.com/.test(p.url())) || ctx.pages()[0] || await ctx.newPage();
-      await page.bringToFront();
-      try { await page.goto(LOGIN_URL, { waitUntil: 'domcontentloaded', timeout: 30000 }); } catch {}
+      const page = await newPageForSite('big'); // TAB MỚI mỗi lần
+      await page.goto(LOGIN_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
       res.json({ ok: true, loginUrl: LOGIN_URL });
     } catch (err) {
       console.error('[Site 3] Login open fail:', err);
@@ -48,15 +45,13 @@ module.exports = (app) => {
 
   app.post('/api/big/save-session', async (_req, res) => res.json({ ok: true }));
 
+  // Checkout — LUÔN mở TAB MỚI; tab cũ tiếp tục chạy
   const handleCheckout = async (req, res) => {
     try {
       const payload = normalizePayload(req);
       if (!payload.url) return res.status(400).json({ ok: false, error: 'Missing "url"' });
 
-      const ctx = await getContext('big');
-      let page = ctx.pages().find(p => /biccamera\.com/.test(p.url())) || ctx.pages()[0] || await ctx.newPage();
-      await page.bringToFront();
-
+      const page = await newPageForSite('big'); // <-- điểm khác biệt: luôn tab mới
       console.log('[Site 3] Checkout start:', payload);
       const out = await addToCartAndCheckout(page, payload);
       res.json({ ok: true, message: 'Checkout flow executed', ...out });

@@ -264,4 +264,14 @@ async function getContext(site = 'default') {
   return ctx;
 }
 
-module.exports = { getContext };
+// ===== THÊM HÀM NÀY: luôn mở TAB MỚI cho mỗi lần Run =====
+async function newPageForSite(site = 'default') {
+  const ctx = await getContext(site);
+  const page = await ctx.newPage();           // <-- luôn tab mới
+  try { await page.bringToFront(); } catch {}
+  page.setDefaultTimeout(20000);
+  page.setDefaultNavigationTimeout(45000);
+  return page;
+}
+
+module.exports = { getContext, newPageForSite };
