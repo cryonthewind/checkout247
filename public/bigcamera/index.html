@@ -16,51 +16,54 @@
   </style>
 </head>
 <body>
-  <h2>BigCamera</h2>
+  <!-- Root wrapper for Big (used by preset) -->
+  <section id="bigcamera" data-site="big">
+    <h2>BigCamera</h2>
 
-  <div class="toolbar">
-    <button id="btnLogin">Open Chrome for login</button>
-    <button id="btnSave">Save session</button>
-    <button id="btnAdd">Thêm dòng</button>
-    <button id="btnImport">Import JSON</button>
-    <input id="file" type="file" accept="application/json" style="display:none" />
-    <span id="fileName" style="opacity:.6"></span>
-    <button id="btnRunAll">Run All</button>
-    <button id="btnClearLog">Clear Log</button>
-  </div>
+    <div class="toolbar">
+      <button id="btnLogin">Open Chrome for login</button>
+      <button id="btnSave">Save session</button>
+      <button id="btnAdd">Thêm dòng</button>
+      <button id="btnImport">Import JSON</button>
+      <input id="file" type="file" accept="application/json" style="display:none" />
+      <span id="fileName" style="opacity:.6"></span>
+      <button id="btnRunAll">Run All</button>
+      <button id="btnClearLog">Clear Log</button>
+    </div>
 
-  <div style="opacity:.7;margin-bottom:10px">
-    Thứ tự cột: Auto click → Tên sản phẩm → Checkout URL → <b>Quantity</b>.
-  </div>
+    <div style="opacity:.7;margin-bottom:10px">
+      Thứ tự cột: Auto click → Tên sản phẩm → Checkout URL → <b>Quantity</b>.
+    </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th class="actions">Thao tác</th>
-        <th class="name">Tên sản phẩm</th>
-        <th class="url">Checkout URL</th>
-        <th class="quantity">Quantity</th>
-        <th class="checkbox">Auto click</th>
-      </tr>
-    </thead>
-    <tbody id="tbody">
-      <tr>
-        <td class="actions">
-            <button class="run">Run</button>
-            <button class="del">Xóa</button>
-        </td>
-        <td class="name"><input type="text" placeholder="Sample product" /></td>
-        <td class="url"><input type="text" placeholder="https://www.biccamera.com/bc/item/...." /></td>
-        <td class="quantity"><input type="number" min="1" step="1" value="1" /></td>
-        <td class="checkbox"><input type="checkbox" checked /></td>
-      </tr>
-    </tbody>
-  </table>
+    <table>
+      <thead>
+        <tr>
+          <th class="actions">Thao tác</th>
+          <th class="name">Tên sản phẩm</th>
+          <th class="url">Checkout URL</th>
+          <th class="quantity">Quantity</th>
+          <th class="checkbox">Auto click</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr>
+          <td class="actions">
+              <button class="run">Run</button>
+              <button class="del">Xóa</button>
+          </td>
+          <td class="name"><input type="text" placeholder="Sample product" /></td>
+          <td class="url"><input type="text" placeholder="https://www.biccamera.com/bc/item/...." /></td>
+          <td class="quantity"><input type="number" min="1" step="1" value="1" /></td>
+          <td class="checkbox"><input type="checkbox" checked /></td>
+        </tr>
+      </tbody>
+    </table>
 
-  <h3 style="margin-top:16px">Log</h3>
-  <div id="log"></div>
+    <h3 style="margin-top:16px">Log</h3>
+    <div id="log"></div>
+  </section>
 
   <script src="/bigcamera/client.js"></script>
-  <script src="/bigcamera/bootstrap-preset.js"></script>
+  <script src="/public/bootstrap-preset.js" defer></script>
 </body>
 </html>

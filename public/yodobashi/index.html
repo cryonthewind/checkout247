@@ -17,87 +17,82 @@
   </style>
 </head>
 <body>
-  <h2>Yodobashi</h2>
+  <!-- Root wrapper for Yodo (used by preset) -->
+  <section id="yodobashi" data-site="yodo">
+    <h2>Yodobashi</h2>
 
-  <div class="toolbar">
-    <button id="btnLogin">Open Chrome for login</button>
-    <button id="btnSave">Save session</button>
-    <button id="btnAdd">Thêm dòng</button>
+    <div class="toolbar">
+      <button id="btnLogin">Open Chrome for login</button>
+      <button id="btnSave">Save session</button>
+      <button id="btnAdd">Thêm dòng</button>
 
-    <button id="btnImport">Import JSON</button>
-    <input id="file" type="file" accept="application/json" style="display:none" />
-    <span id="fileName" style="opacity:.6"></span>
+      <button id="btnImport">Import JSON</button>
+      <input id="file" type="file" accept="application/json" style="display:none" />
+      <span id="fileName" style="opacity:.6"></span>
 
-    <button id="btnRunAll">Run All</button>
-    <button id="btnClearLog">Clear Log</button>
-  </div>
-  <!-- ===== Scheduler (Site 2) ===== -->
-  <section id="yodoScheduler" style="margin:10px 0; padding:10px; border:1px solid #ddd; border-radius:8px;">
-    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-      <strong>⏱ Hẹn giờ (Asia/Tokyo):</strong>
-
-      <!-- time at HH:MM(:SS) -->
-      <input id="yAtTime" type="time" step="1" style="width:130px" placeholder="HH:MM:SS" />
-
-      <!-- optional: daily by default -->
-      <label style="display:flex; align-items:center; gap:6px;">
-        <input id="yDaily" type="checkbox" checked />
-        <span>Repeat daily</span>
-      </label>
-
-      <!-- job id to manage on server -->
-      <input id="yJobId" type="text" style="width:160px" placeholder="job id (e.g. yodo-0930)" value="yodo-0930" />
-
-      <!-- spread between items -->
-      <input id="ySpread" type="number" min="0" step="1000" style="width:150px" placeholder="spread ms (e.g. 5000)" value="5000" />
-
-      <button id="yBtnStart">Schedule</button>
-      <button id="yBtnStop">Stop</button>
-      <button id="yBtnList">List</button>
+      <button id="btnRunAll">Run All</button>
+      <button id="btnClearLog">Clear Log</button>
     </div>
 
-    <div style="margin-top:8px;">
-      <div style="font-size:12px; color:#666;">Mỗi dòng 1 link. Có thể thêm số lượng bằng “, qty” hoặc “ xN ”.</div>
-      <textarea id="yLinks" rows="5" style="width:100%; font-family:monospace;"
-        placeholder="https://www.yodobashi.com/product/100000001234567890/, 1
-  https://www.yodobashi.com/product/100000009876543210/ x2"></textarea>
+    <!-- ===== Scheduler (Site 2) ===== -->
+    <section id="yodoScheduler" style="margin:10px 0; padding:10px; border:1px solid #ddd; border-radius:8px;">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <strong>⏱ Hẹn giờ (Asia/Tokyo):</strong>
+        <input id="yAtTime" type="time" step="1" style="width:130px" placeholder="HH:MM:SS" />
+        <label style="display:flex; align-items:center; gap:6px;">
+          <input id="yDaily" type="checkbox" checked />
+          <span>Repeat daily</span>
+        </label>
+        <input id="yJobId" type="text" style="width:160px" placeholder="job id (e.g. yodo-0930)" value="yodo-0930" />
+        <input id="ySpread" type="number" min="0" step="1000" style="width:150px" placeholder="spread ms (e.g. 5000)" value="5000" />
+        <button id="yBtnStart">Schedule</button>
+        <button id="yBtnStop">Stop</button>
+        <button id="yBtnList">List</button>
+      </div>
+
+      <div style="margin-top:8px;">
+        <div style="font-size:12px; color:#666;">Mỗi dòng 1 link. Có thể thêm số lượng bằng “, qty” hoặc “ xN ”.</div>
+        <textarea id="yLinks" rows="5" style="width:100%; font-family:monospace;"
+          placeholder="https://www.yodobashi.com/product/100000001234567890/, 1
+https://www.yodobashi.com/product/100000009876543210/ x2"></textarea>
+      </div>
+    </section>
+    <!-- ===== /Scheduler ===== -->
+
+    <div style="opacity:.7;margin-bottom:10px">
+      Thứ tự cột: Auto click → Tên sản phẩm → Checkout URL → <b>Quantity</b>.
     </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="actions">Thao tác</th>
+          <th class="name">Tên sản phẩm</th>
+          <th class="url">Checkout URL</th>
+          <th class="quantity">Quantity</th>
+          <th class="checkbox">Auto click</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr>
+          <td class="actions">
+            <button class="run">Run</button>
+            <button class="del">Xóa</button>
+          </td>
+          <td class="name"><input type="text" placeholder="Sample product" /></td>
+          <td class="url"><input type="text" placeholder="https://yodobashi.com/product/..." /></td>
+          <td class="quantity"><input type="number" min="1" step="1" placeholder="1" value="1" /></td>
+          <td class="checkbox"><input type="checkbox" checked /></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:16px">Log</h3>
+    <div id="log"></div>
   </section>
-  <!-- ===== /Scheduler ===== -->
-
-  <div style="opacity:.7;margin-bottom:10px">
-    Thứ tự cột: Auto click → Tên sản phẩm → Checkout URL → <b>Quantity</b>.
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th class="actions">Thao tác</th>
-        <th class="name">Tên sản phẩm</th>
-        <th class="url">Checkout URL</th>
-        <th class="quantity">Quantity</th>
-        <th class="checkbox">Auto click</th>
-      </tr>
-    </thead>
-    <tbody id="tbody">
-      <tr>
-        <td class="actions">
-          <button class="run">Run</button>
-          <button class="del">Xóa</button>
-        </td>
-        <td class="name"><input type="text" placeholder="Sample product" /></td>
-        <td class="url"><input type="text" placeholder="https://yodobashi.com/product/..." /></td>
-        <td class="quantity"><input type="number" min="1" step="1" placeholder="1" value="1" /></td>
-        <td class="checkbox"><input type="checkbox" checked /></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3 style="margin-top:16px">Log</h3>
-  <div id="log"></div>
 
   <script src="/yodobashi/client.js"></script>
-  <script src="/yodobashi/bootstrap-preset.js"></script>
+  <script src="/public/bootstrap-preset.js" defer></script>
   <script src="/yodobashi/sheduler.js"></script>
 </body>
 </html>
