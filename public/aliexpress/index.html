@@ -7,55 +7,57 @@
   <link rel="stylesheet" href="/common.css" />
 </head>
 <body>
-  <div class="header">
-    <h1>AliExpress</h1>
-    <div class="right">
-      <button id="btnImport">Import JSON</button>
-      <label for="file" class="badge" id="fileName"></label>
-      <button id="btnRunAll" class="primary">Run All</button>
-      <button id="btnClearLog">Clear Log</button>
+  <!-- Root wrapper for Ali (used by preset) -->
+  <section id="aliexpress" data-site="ali">
+    <div class="header">
+      <h1>AliExpress</h1>
+      <div class="right">
+        <button id="btnImport">Import JSON</button>
+        <label for="file" class="badge" id="fileName"></label>
+        <button id="btnRunAll" class="primary">Run All</button>
+        <button id="btnClearLog">Clear Log</button>
+      </div>
     </div>
-  </div>
 
-  <div class="toolbar">
-    <button id="btnLogin">Open Chrome for login</button>
-    <button id="btnSave">Save session</button>
-    <button id="btnAdd">Thêm dòng</button>
-    <span class="hint">Thứ tự cột: Auto click → Tên sản phẩm → Checkout URL → Card last 4.</span>
-  </div>
+    <div class="toolbar">
+      <button id="btnLogin">Open Chrome for login</button>
+      <button id="btnSave">Save session</button>
+      <button id="btnAdd">Thêm dòng</button>
+      <span class="hint">Thứ tự cột: Auto click → Tên sản phẩm → Checkout URL → Card last 4.</span>
+    </div>
 
-  <table id="tbl">
-    <thead>
-      <tr>
-        <th class="actions">Thao tác</th>
-        <th class="name">Tên sản phẩm</th>
-        <th class="url">Checkout URL</th>
-        <th class="last4">Card last 4</th>
-        <th class="checkbox">Auto click</th>
-      </tr>
-    </thead>
-    <tbody id="tbody">
-      <tr>
-        <td class="actions">
-          <div class="row-actions">
-            <button class="run primary">Run</button>
-            <button class="del">Xóa</button>
-          </div>
-        </td>
-        <td class="name"><input placeholder="Sample product" /></td>
-        <td class="url"><input placeholder="https://ja.aliexpress.com/p/trade/confirm.html?..." /></td>
-        <td class="last4"><input placeholder="5063" /></td>
-        <td class="checkbox"><input type="checkbox" checked /></td>
-      </tr>
-    </tbody>
-  </table>
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th class="actions">Thao tác</th>
+          <th class="name">Tên sản phẩm</th>
+          <th class="url">Checkout URL</th>
+          <th class="last4">Card last 4</th>
+          <th class="checkbox">Auto click</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr>
+          <td class="actions">
+            <div class="row-actions">
+              <button class="run primary">Run</button>
+              <button class="del">Xóa</button>
+            </div>
+          </td>
+          <td class="name"><input placeholder="Sample product" /></td>
+          <td class="url"><input placeholder="https://ja.aliexpress.com/p/trade/confirm.html?..." /></td>
+          <td class="last4"><input placeholder="5063" /></td>
+          <td class="checkbox"><input type="checkbox" checked /></td>
+        </tr>
+      </tbody>
+    </table>
 
-  <h3>Log</h3>
-  <div class="log" id="log">[--:--:--]  ⏳ AliExpress Checkout…</div>
-  <input id="file" type="file" accept="application/json" />
+    <h3>Log</h3>
+    <div class="log" id="log">[--:--:--]  ⏳ AliExpress Checkout…</div>
+    <input id="file" type="file" accept="application/json" />
+  </section>
 
   <script src="/aliexpress/client.js"></script>
-  <script src="/aliexpress/bootstrap-preset.js"></script>
-
+  <script src="/public/bootstrap-preset.js" defer></script>
 </body>
 </html>

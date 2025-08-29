@@ -10,6 +10,7 @@ tmp/
 .disk-cache/
 .disk-cache/
 user-data/
+last-confirm-*
 
 # Ignore log files
 *.log

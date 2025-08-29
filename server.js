@@ -16,9 +16,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/storage', express.static(path.join(__dirname, 'storage')));   // Site 1: AliExpress
 require(path.join(__dirname, 'routes', 'ali'))(app);   // Site 1: AliExpress
 require(path.join(__dirname, 'routes', 'yodo'))(app);  // Site 2: Yodobashi
+// Site 3: BigCamera
+require(path.join(__dirname, 'routes', 'big'))(app);
 // server.js
 require(path.join(__dirname, 'routes', 'yodo_schedule'))(app);  // Site 2: scheduler
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
+// Serve JSON preset
+app.use('/storage', express.static(path.join(__dirname, 'storage')));
 
 app.listen(PORT, async () => {
   await getContext();
