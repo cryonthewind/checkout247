@@ -1,7 +1,7 @@
 // routes/yodo_schedule.js
 // Purpose: Server-side scheduler for Site 2 (Yodobashi) using node-cron.
 // Exposes:
-//   POST /api/yodo/schedule/start  { cron, items, timezone?, spreadMs?, id? }
+//   POST /api/yodo/schedule/start  { cron, items, timezone?, spreadMs?, id?, second?, at? }
 //   POST /api/yodo/schedule/stop   { id }
 //   GET  /api/yodo/schedule/list
 //
@@ -9,6 +9,11 @@
 // - "items" is an array of payloads accepted by addToCartAndCheckout({ url, quantity, autoClick, cvv? }).
 // - CVV falls back to env (YODO_CVV/CVV/CARD_CVV) if not present.
 // - Jobs run sequentially with an optional gap "spreadMs" between items.
+// - Added seconds support:
+//    • If 'cron' has 6 fields, it's used as-is (second minute hour dom mon dow).
+//    • If 'cron' has 5 fields + 'second' provided, we prepend second.
+//    • If 'at' = 'HH:mm:ss' provided, we convert it to 'ss mm HH * * *'.
+//    • Validation checks both 6-field and 5-field (with upgrade) paths.
 
 const cron = require('node-cron');
 const { getContext } = require('../context');
@@ -36,22 +41,88 @@ function envCVV() {
   );
 }
 
+/** Parse "HH:mm:ss" -> {h,m,s} with range checks */
+function parseAt(atStr) {
+  if (typeof atStr !== 'string') return null;
+  const m = atStr.trim().match(/^(\d{1,2}):(\d{2}):(\d{2})$/);
+  if (!m) return null;
+  const h = Number(m[1]), mm = Number(m[2]), s = Number(m[3]);
+  if (h < 0 || h > 23) return null;
+  if (mm < 0 || mm > 59) return null;
+  if (s < 0 || s > 59) return null;
+  return { h, m: mm, s };
+}
+
+/** Build a 6-field cron (with seconds) from inputs */
+function buildCronWithSeconds({ cronExpr, second, at }) {
+  // 1) If 'at' is provided, convert to "ss mm HH * * *"
+  const parsedAt = parseAt(at);
+  if (parsedAt) {
+    const { h, m, s } = parsedAt;
+    return `${s} ${m} ${h} * * *`;
+  }
+
+  const expr = String(cronExpr || '').trim().replace(/\s+/g, ' ');
+  if (!expr) return null;
+
+  const parts = expr.split(' ');
+  if (parts.length === 6) {
+    // Already has seconds
+    return expr;
+  }
+
+  if (parts.length === 5) {
+    // Try to upgrade 5-field -> 6-field using 'second'
+    let sec = second;
+    if (sec == null || sec === '') sec = 0; // default to 0 if not provided
+    const sNum = Number(sec);
+    if (!Number.isFinite(sNum) || sNum < 0 || sNum > 59) {
+      throw new Error('Invalid "second" (0-59) when upgrading 5-field cron to 6-field.');
+    }
+    return `${sNum} ${expr}`; // prepend seconds
+  }
+
+  // Unsupported field count
+  return null;
+}
+
 module.exports = (app) => {
   // Start a schedule
   app.post('/api/yodo/schedule/start', async (req, res) => {
     try {
       const body = req.body || {};
-      const cronExpr  = String(body.cron || '').trim(); // e.g., "30 9 * * *"
+      const rawCron   = String(body.cron || '').trim(); // may be 5 or 6 fields
+      const at        = body.at; // "HH:mm:ss" optional
+      const second    = body.second; // optional second (0-59) to upgrade 5-field
       const itemsIn   = Array.isArray(body.items) ? body.items : [];
       const timezone  = String(body.timezone || 'Asia/Tokyo');
       const spreadMs  = Number(body.spreadMs || 5000); // gap between items
       const id        = String(body.id || `yodo-${Date.now()}`);
 
-      if (!cronExpr || !cron.validate?.(cronExpr)) {
-        return res.status(400).json({ ok: false, error: 'Invalid or missing cron expression, e.g. "30 9 * * *"' });
-      }
       if (!itemsIn.length) {
         return res.status(400).json({ ok: false, error: 'Missing items[] (at least one { url, ... })' });
+      }
+
+      // Build a valid 6-field cron with seconds
+      let cronExpr;
+      try {
+        cronExpr = buildCronWithSeconds({ cronExpr: rawCron, second, at });
+      } catch (e) {
+        return res.status(400).json({ ok: false, error: e.message || String(e) });
+      }
+      if (!cronExpr) {
+        return res.status(400).json({
+          ok: false,
+          error: 'Invalid cron/at. Provide either 6-field cron (e.g. "59 29 9 * * *"), or 5-field + second, or at="HH:mm:ss".'
+        });
+      }
+
+      // Validate using node-cron (supports seconds)
+      if (!cron.validate?.(cronExpr)) {
+        return res.status(400).json({
+          ok: false,
+          error: `Invalid cron expression: "${cronExpr}". Expected "sec min hour dom mon dow".`
+        });
       }
 
       // Stop existing same id
@@ -100,7 +171,15 @@ module.exports = (app) => {
 
       active.set(id, task);
       task.start();
-      return res.json({ ok: true, id, cron: cronExpr, timezone, items: items.length, spreadMs });
+      return res.json({
+        ok: true,
+        id,
+        cron: cronExpr,         // now 6-field with seconds when applicable
+        timezone,
+        items: items.length,
+        spreadMs,
+        hint: 'Format is "sec min hour dom mon dow". Example 09:29:59 -> "59 29 9 * * *".'
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: String(err) });
     }
