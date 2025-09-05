@@ -36,3 +36,11 @@ npm run stop-port
   --user-data-dir="$HOME/.bigcamera-chrome" \
   --lang=ja-JP
 BIG_USE_CDP=1 BIG_CDP_PORT=9222 node server.js
+
+
+### LINK CHEKOUT EDION 
+
+#### CART
+https://www.edion.com/order/EPO00100.html
+### 注文内容の確認
+https://www.edion.com/order/EPO00400.html

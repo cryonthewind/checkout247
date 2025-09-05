@@ -1,5 +1,11 @@
 [
    {
+      "name":"BUT DEN",
+      "url":"https://www.yodobashi.com/ec/product/100000001008891315/",
+      "quantity":"1",
+      "autoClick":true
+   },
+   {
       "name":"SQ1 BLUE",
       "url":"https://www.yodobashi.com/product-detail/100000001005864550/",
       "quantity":"1",
