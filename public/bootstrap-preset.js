@@ -52,6 +52,17 @@
           col3:        String(Math.max(1, parseInt(x.quantity ?? x.qty ?? 1, 10) || 1)),
           autoClick:   x.autoClick !== undefined ? !!x.autoClick : true
         })
+      },
+      {
+        key: 'joshin',
+        json: '/storage/joshin.json',
+        selectors: ['#joshin', '#jos', '[data-site="jos"]', '#site4'],
+        normalize: (x) => ({
+          productName: x.name || x.productName || '',
+          checkoutUrl: x.url  || x.checkoutUrl || x.productUrl || '',
+          col3:        String(Math.max(1, parseInt(x.quantity ?? x.qty ?? 1, 10) || 1)),
+          autoClick:   x.autoClick !== undefined ? !!x.autoClick : true
+        })
       }
     ];
   
@@ -186,8 +197,9 @@
       // First attempts
       SITES.forEach(site => {
         setTimeout(() => fillSite(site), 120);
-        setTimeout(() => fillSite(site), 500);
         setTimeout(() => fillSite(site), 1000);
+        setTimeout(() => fillSite(site), 2000);
+        setTimeout(() => fillSite(site), 3000);
       });
   
       // Watch DOM additions; if a site's root appears, fill it once

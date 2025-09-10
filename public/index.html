@@ -19,6 +19,7 @@
       <button class="tab-btn active" data-for="tab-site1">Site 1 (AliExpress)</button>
       <button class="tab-btn" data-for="tab-site2">Site 2 (Yodobashi)</button>
       <button class="tab-btn" data-for="tab-site3">Site 3 (BigCamera)</button>
+      <button class="tab-btn" data-for="tab-site4">Site 4 (Joshin)</button>
     </div>
   </div>
 
@@ -30,6 +31,9 @@
   </div>
   <div id="tab-site3" class="tab-panel">
     <iframe class="frame" src="/bigcamera/index.html" title="Site 3"></iframe>
+  </div>
+  <div id="tab-site4" class="tab-panel">
+    <iframe class="frame" src="/joshin/index.html" title="Site 4"></iframe>
   </div>
 
   <script>
@@ -45,6 +49,7 @@
     if (q === '2' || q === 'yodobashi') activate('tab-site2');
     if (q === '1' || q === 'aliexpress') activate('tab-site1');
     if (q === '3' || q === 'big' || q === 'bigcamera') activate('tab-site3');
+    if (q === '4' || q === 'joshin') activate('tab-site4');
   </script>
 </body>
 </html>

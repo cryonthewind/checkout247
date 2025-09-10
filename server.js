@@ -18,6 +18,8 @@ require(path.join(__dirname, 'routes', 'ali'))(app);   // Site 1: AliExpress
 require(path.join(__dirname, 'routes', 'yodo'))(app);  // Site 2: Yodobashi
 // Site 3: BigCamera
 require(path.join(__dirname, 'routes', 'big'))(app);
+// Site 4: Joshin
+require(path.join(__dirname, 'routes', 'joshin'))(app);
 // server.js
 require(path.join(__dirname, 'routes', 'yodo_schedule'))(app);  // Site 2: scheduler
 app.use('/public', express.static(path.join(__dirname, 'public')));
