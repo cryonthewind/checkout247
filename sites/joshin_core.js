@@ -68,16 +68,11 @@ async function addToCartOnly(pageOrNull, { url, autoClick = true }) {
     await clickHard(page, btn);
   }
 
-  // 3) Best-effort wait for cart confirmation/toast
-  await Promise.race([
-    page.waitForSelector('text=カートに追加', { timeout: 5000 }).catch(()=>null),
-    page.waitForTimeout(1200)
-  ]);
+  // 3) Just wait a bit, do NOT wait for redirect/cart page
+  await page.waitForTimeout(1500);
 
+  // 4) Do NOT navigate away, keep the current product page
   const current = page.url();
-
-  // 4) Close owned browser if we created one
-  if (browser) await browser.close().catch(()=>{});
 
   return { ok: true, url, at: current };
 }
